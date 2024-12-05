@@ -1,0 +1,18 @@
+:root {
+    /* Backgrounds */
+    --main-background-highlight: #fff;
+    --main-background: black;
+    --main-text: #fff;
+    --main-text-highlight: rgb(10, 10, 10);
+    --main-border: #fff;
+    --main-font-family: Arial, Helvetica, sans-serif;
+    --main-opacity: 1;
+    --main-body-width: 100vw;
+    --main-font-weight: 500;
+    
+
+    /* Highlights */
+    --brat-green: #8ACE00;
+    --nirvana-blue: #15cbe3;
+    --king-geedorah: #f90103;
+}

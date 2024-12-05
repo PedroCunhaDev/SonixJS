@@ -1,0 +1,36 @@
+@import url('./vars.css');
+
+.modal {
+    position: absolute;
+    z-index: 4;
+    top: 10%;
+    right: 10%;
+    transform: scale(0, 0) translate(0%, 0%);
+    transform-origin: top right;
+    backdrop-filter: blur(2px);
+    padding: 1em;
+    width: 500px;
+    max-width: 95vw;
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+    background-color: var(--main-background);
+    transition: all 0.25s ease-out;
+    box-shadow: 0 0 10px var(--main-border);
+    
+    .input-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        input[type="range"] {
+            height: 20px;
+        }
+    }
+    
+    &.show {
+        top: 50%;
+        right: 50%;
+        transform: scale(1, 1) translate(50%, -50%);
+    }
+}
