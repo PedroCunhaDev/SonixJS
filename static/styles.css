@@ -145,9 +145,6 @@ button {
 
 
     #volume {
-        @media (max-width: 768px) {
-            display: none;
-        }
         margin: auto;
         height: 25px;
         border-radius: 15px;

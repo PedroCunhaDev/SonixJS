@@ -25,7 +25,6 @@ updateCSSColor("inp-text-highlight", "main-text-highlight");
 updateCSSColor("inp-border", "main-border", () => onChangeBorderColor());
 
 function onChangeBorderColor() {
-    debugger;
     const check = document.getElementById('inp-check-border');
     check.value = '1';
     check.checked = true;
@@ -80,6 +79,7 @@ setupRangeInput('inp-body-width', 'main-body-width', 'body-width', 30, 100, 100,
 //#endregion
 //#region checkboxes
 const checkBorder = document.getElementById('inp-check-border');
+const checkRepeatSong = document.getElementById('inp-check-repeat-song');
 const storedCheckBorder = localStorage.getItem('check-border');
 const storedBorderColor = localStorage.getItem('main-border') || '#000000';
 
@@ -88,6 +88,11 @@ if (storedCheckBorder === '0') {
 } else {
     updateBorderColor(storedBorderColor, 1);
 }
+
+checkRepeatSong.addEventListener('input', () => {
+    const isChecked = checkRepeatSong.checked;
+    repeatSong = isChecked;
+});
 
 checkBorder.checked = storedCheckBorder === '1';
 

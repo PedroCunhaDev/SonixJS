@@ -31,10 +31,7 @@
         </button>
         <button id="styles-btn" onclick="toggleModal(stylesModal, stylesBtn)">
             Styles
-        </button><!--
-        <input style="position: relative; z-index: 1;" type="file" id="file-input" accept=".mp3">
-        <button onclick="uploadMp3()">Upload</button>
-        -->
+        </button>
         <div id="styles-modal" class="modal">
             <div class="container">
                 <div>
@@ -114,16 +111,25 @@
             </div>
         </div>
         <div id="options-modal" class="modal">
-            <div>
+            <div class="input-container">
                 <span style="font-size: 2em;">Options</span>
                 <button onclick="toggleModal(optionsModal, optionsBtn)">Close</button>
             </div><br>
-            <div class="container">
-                    <div class="input-container">
+            <div class="input-container">
                         <label>Volume</label>
-                        <input id="volume" type="range" min="0" max="1" step="0.01" value="0.5">
-                    </div>                    
+                        <input id="volume" type="range" min="0" max="1" step="0.01" value="1">           
+            </div><br>
+            <span style="font-size: 2em;">Songs</span><br>
+            <div class="input-container">
+                    <label>Repeat</label>
+                    <input id="inp-check-repeat-song" type="checkbox" value="0">
             </div>
+            <div class="input-container">
+				<input style="position: relative; z-index: 1;" type="file" id="file-input" accept=".mp3">
+				<button onclick="uploadMp3()">Upload</button>
+			</div>
+			<button onclick="fetchSongs()">Shuffle</button>
+			<button onclick="ngrok()">ngrok</button>
         </div>
     </div>
     <div class="table-wrapper">
@@ -138,7 +144,7 @@
                     <th>Duration</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody id="tbody">
             </tbody>
         </table>
     </div>

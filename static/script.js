@@ -2,6 +2,7 @@ let songs = [];
 let currentSong = 0;
 let isPlaying = false;
 let isEditing = false;
+let repeatSong = false;
 
 const audioPlayer = document.getElementById('audio-player');
 const progressBar = document.getElementById('progress-bar');
@@ -41,6 +42,11 @@ audioPlayer.ontimeupdate = () => {
 };
 
 audioPlayer.onended = () => {
+	if (repeatSong) {
+		audioPlayer.currentTime = 0;
+		return audioPlayer.play();
+	}
+	
     playNextSong();
 }
 
@@ -50,19 +56,13 @@ progressBar.oninput = () => {
 };
 
 function updateVolumeBar() {
-    if (window.innerWidth >= 768) {
-        const volume = volumeBar.value * 100;
-        volumeBar.style.setProperty('--value', `${volume}%`);
-        audioPlayer.volume = volumeBar.value;
-    }
+    const volume = volumeBar.value * 100;
+    volumeBar.style.setProperty('--value', `${volume}%`);
+    audioPlayer.volume = volumeBar.value;
 }
-if (window.innerWidth >= 768) {
-    volumeBar.oninput = () => updateVolumeBar();
-    updateVolumeBar();
-}
-else {
-    audioPlayer.volume = 1;
-}
+volumeBar.oninput = () => updateVolumeBar();
+updateVolumeBar();
+audioPlayer.volume = 1;
 
 previousBtn.onclick = () => play(currentSong == 0 ? songs.length - 1 : currentSong - 1);
 playBtn.onclick = () => playPause();
@@ -143,7 +143,6 @@ function playPause() {
     }
 }
 
-
 function toggleEdit() {
     isEditing = !isEditing;
     if (isEditing) {
@@ -160,6 +159,7 @@ function shuffle(arr) {
     return arr;
 }
 async function fetchSongs() {
+    tbody.innerHTML = "";
     const response = await fetch('/api/songs');
     songs = await response.json();
     songs = shuffle(songs);
@@ -244,6 +244,13 @@ function uploadMp3() {
     });
 }
 
+async function ngrok() {
+	const response = await fetch('/ngrok', {method:'POST'});
+	debugger;
+	const result = await response.text();
+	alert(result);
+}
+
 function pause() {
     audioPlayer.pause();
     isPlaying = false;
@@ -275,11 +282,11 @@ function play(filename) {
 
 function nowPlayingText() {
     let text = `${songs[currentSong].filename.slice(0, -4)}`;
+    document.title = text;
     if (songs[currentSong].artist != "Unknown Artist") {
         text += ` - ${songs[currentSong].artist}`;
     }
     nowPlaying.innerHTML = text;
-    document.title = text;
 }
 
 
