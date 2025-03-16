@@ -211,8 +211,12 @@ button {
     opacity: .6;
     z-index: -1;
     background: var(--main-background);
-    border: 1px solid var(--main-border);
-    border-radius: 10px;
+}
+
+.table-wrapper:before, table, .table-wrapper {
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    overflow-x: hidden;
 }
 .table-wrapper {
     display: block;
@@ -222,6 +226,7 @@ button {
     overflow-y: scroll;
     scrollbar-width: none;
     scrollbar-color: var(--main-background-highlight) transparent;
+    border: 1px solid var(--main-border);
     @media (max-width: 768px) {
         max-height: 66vh;
     }
@@ -229,7 +234,7 @@ button {
 
 table {
     animation: fade-in .5s linear;
-    width: calc(100% + 1px);
+    width: calc(100% + 2px);
     border-collapse: collapse;
 
     @media (max-width: 500px) {
@@ -259,13 +264,6 @@ table {
             color: var(--main-text-highlight);
         }
     }
-}
-
-.table-wrapper,
-th,
-td {
-    border: 1px solid var(--main-border);
-    border: var(--main-check-border);
 }
 
 tr:nth-child(even) {
