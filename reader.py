@@ -7,7 +7,7 @@ import threading
 
 # Set your SDHC card directory here
 mp3_directory = "storage/sdcard1/" # tablet
-mp3_directory = "../../msc" # PC
+mp3_directory = "msc/" # PC
 playlist_directory = "playlists"
 
 def get_mp3_files(directory):
@@ -174,7 +174,7 @@ def upload_mp3():
 
         file.save(filepath)
 
-        metadata = extract_metadata(filepath)
+        metadata = extract_metadata(filepath, None)
         if metadata:
             return jsonify(success=True, metadata=metadata)
 

@@ -38,8 +38,8 @@ if ('mediaSession' in navigator) {
 progressBar.style.setProperty('--value', `0%`);
 
 audioPlayer.ontimeupdate = () => {
-    const progress = (audioPlayer.currentTime / audioPlayer.duration) * 100;
-    progressBar.style.setProperty('--value', `${progress}%`);
+    const progress = (audioPlayer.currentTime / audioPlayer.duration) * 1000;
+    progressBar.style.setProperty('--value', `${Math.round(progress) / 10}%`);
     progressBar.value = progress || 0;
 };
 
@@ -223,17 +223,18 @@ async function updateMetadata(index, field, value) {
 
 function uploadMp3() {
     const fileInput = document.getElementById('file-input');
+    const uploadMessage = document.getElementById('upload-message');
     const file = fileInput.files[0];
 
     if (!file) {
-        document.getElementById('upload-message').innerText = 'Please select a file first.';
+        alert('Please select a file first.');
         return;
     }
 
     const formData = new FormData();
     formData.append('file', file);
 
-    document.getElementById('upload-message').innerText = 'Uploading...';
+    uploadMessage.innerText = 'Uploading...';
 
     fetch('/api/upload', {
         method: 'POST',
@@ -241,24 +242,21 @@ function uploadMp3() {
     })
     .then(response => response.json())
     .then(data => {
-        if (data.success) {
-            document.getElementById('upload-message').innerText = 'Upload successful!';
-            if (data.metadata) {
-                document.getElementById('upload-message').innerText += `\nMetadata: ${JSON.stringify(data.metadata)}`;
-            }
+        if (data.success && data.metadata) {
+            alert(`Upload successful!\nSong - ${data.metadata.title}`);
         } else {
-            document.getElementById('upload-message').innerText = `Error: ${data.error || 'Unknown error'}`;
+            alert(`Error: ${data.error || 'Unknown error'}`);
         }
+        uploadMessage.innerText = '';
     })
     .catch(error => {
-        document.getElementById('upload-message').innerText = 'Error during upload. Please try again.';
+        alert('Error during upload. Please try again.');
         console.error(error);
     });
 }
 
 async function ngrok() {
 	const response = await fetch('/ngrok', {method:'POST'});
-	debugger;
 	const result = await response.text();
 	alert(result);
 }
@@ -267,7 +265,6 @@ let searchTimeout;
 previousSearch = '';
 function search() {
     const text = searchInput.value.toLowerCase();
-    console.log(text);
     if (text.length == 1 || text == previousSearch) return;
     previousSearch = text;
     if (text.length == 0) {

@@ -18,19 +18,24 @@
     <div id="glow"></div>
     <div id="upload-message"></div>
     <div id="top-bar">
-        <span id="greeting">
-            <input id="search" type="search" placeholder="Search...">
-        </span>
+        <div class="top-controls">
+            <span id="greeting">
+                <input id="search" type="search" placeholder="Search...">
+            </span>
+        </div>
 
-        <button id="options-btn" onclick="toggleModal(optionsModal, optionsBtn)">
-            Options
-        </button>
-        <button id="edit-btn" onclick="toggleEdit()">
-            Edit
-        </button>
-        <button id="styles-btn" onclick="toggleModal(stylesModal, stylesBtn)">
-            Styles
-        </button>
+        <div class="top-controls">
+            <button id="options-btn" onclick="toggleModal(optionsModal, optionsBtn)">
+                Options
+            </button>
+            <button id="edit-btn" onclick="toggleEdit()">
+                Edit
+            </button>
+            <button id="styles-btn" onclick="toggleModal(stylesModal, stylesBtn)">
+                Styles
+            </button>
+        </div>
+
         <div id="styles-modal" class="modal">
             <div class="container">
                 <div>
