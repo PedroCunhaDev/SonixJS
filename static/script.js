@@ -271,6 +271,7 @@ function search() {
     if (text.length == 1 || text == previousSearch) return;
     previousSearch = text;
     if (text.length == 0) {
+        songs = allSongs;
         loadTable(allSongs);
         return;
     }
