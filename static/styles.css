@@ -27,31 +27,32 @@ button {
     z-index: 0;
     left: 0;
     top: 0;
-    background-image: radial-gradient(circle, var(--main-background-highlight, #ff007f) 10%, transparent 100%);
+    background-size: var(--main-glow-scale-w) var(--main-glow-scale-h);
+    background-image: radial-gradient(circle, var(--main-background-highlight) 0%, var(--main-background) 105%);
     opacity: 0.4;
-    animation: glow-move 16s ease-in-out infinite;
+    animation: glow-move 64s ease-in-out infinite;
     transition: background-image 0.2s, transform 0.1s, filter 0.1s;
   }
-  @keyframes glow-move {
-    0% {
-      background-position: 2vw 8vh;
-    }
-    20% {
-      background-position: 16vw 32vh;
-    }
-    30% {
-      background-position: 24vw 20vh;
-    }
-    60% {
-      background-position: 40vw 50vh;
-    }
-    80% {
-      background-position: 20vw 20vh;
-    }
-    100% {
-      background-position: 2vw 8vh;
-    }
+@keyframes glow-move {
+  0% {
+    background-position: 2vw 8vh;
   }
+  20% {
+    background-position: 16vw 32vh;
+  }
+  30% {
+    background-position: 24vw 20vh;
+  }
+  60% {
+    background-position: 40vw 50vh;
+  }
+  80% {
+    background-position: 20vw 20vh;
+  }
+  100% {
+    background-position: 2vw 8vh;
+  }
+}
 
 button {
     cursor: pointer;

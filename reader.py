@@ -7,18 +7,18 @@ import threading
 
 # Set your SDHC card directory here
 mp3_directory = "storage/sdcard1/" # tablet
-mp3_directory = "D:/" # PC
+mp3_directory = "../../msc" # PC
+playlist_directory = "playlists"
 
 def get_mp3_files(directory):
     mp3_files = []
-    print(os.listdir(directory))
     for filename in os.listdir(directory):
         if filename.endswith(".mp3"):
             filepath = os.path.join(directory, filename)
             mp3_files.append(filepath)
     return mp3_files
 
-def extract_metadata(filepath):
+def extract_metadata(filepath, search):
     try:
         audio = MP3(filepath, ID3=EasyID3)
         metadata = {
@@ -28,19 +28,60 @@ def extract_metadata(filepath):
             'duration': audio.info.length,
             'filename': os.path.basename(filepath)
         }
-        return metadata
+        if search is None:
+            return metadata
+        print(search)
+        print(metadata['title'])
+        print(search in metadata['title'])
+        if (search in metadata['title'].lower() or
+            search in metadata['artist'].lower() or
+            search in metadata['album'].lower() or
+            search in metadata['filename'].lower()):
+            return metadata
+        print('É DIFERENTE')
+        return None
     except Exception as e:
         print(f"Error processing {filepath}: {e}")
         return None
 
-def get_all_metadata(directory):
+def get_all_metadata(directory, search):
     files = get_mp3_files(directory)
     metadata_list = []
     for file in files:
-        metadata = extract_metadata(file)
-        if metadata:
+        metadata = extract_metadata(file, search if search is not None else None)
+        if metadata is not None:
             metadata_list.append(metadata)
     return metadata_list
+
+def get_playlist_path(name):
+    return os.path.join(playlist_directory, f"{name}.txt")
+
+def read_playlist(name):
+    path = get_playlist_path(name)
+    if os.path.exists(path):
+        with open(path, 'r') as f:
+            return [line.strip() for line in f.readlines()]
+    return []
+
+def write_playlist(name, songs):
+    path = get_playlist_path(name)
+    with open(path, 'w') as f:
+        f.write("\n".join(songs))
+
+def delete_playlist(name):
+    path = get_playlist_path(name)
+    if os.path.exists(path):
+        os.remove(path)
+
+def reorder_song_in_playlist(name, old_index, new_index):
+    songs = read_playlist(name)
+    if 0 <= old_index < len(songs) and 0 <= new_index < len(songs):
+        song = songs.pop(old_index)
+        songs.insert(new_index, song)
+        write_playlist(name, songs)
+
+def list_playlists():
+    return [f.replace(".txt", "") for f in os.listdir(playlist_directory) if f.endswith(".txt")]
 
 app = Flask(__name__)
 
@@ -48,10 +89,12 @@ app = Flask(__name__)
 def index():
     return render_template('index.html')
 
-@app.route('/api/songs')
-def songs():
-    metadata_list = get_all_metadata(mp3_directory)
+@app.route('/api/songs', methods=['GET'])
+def search():
+    search_query = request.args.get('search', '')
+    metadata_list = get_all_metadata(mp3_directory, search_query.lower() if search_query else None)
     return jsonify(metadata_list)
+
 
 @app.route('/song/<filename>')
 def serve_mp3(filename):
@@ -86,6 +129,35 @@ def update_metadata():
     except Exception as e:
         print(f"Error updating metadata for {filename}: {e}")
         return jsonify(success=False, error=str(e)), 500
+
+@app.route('/api/playlists', methods=['GET'])
+def get_playlists():
+    return jsonify(list_playlists())
+
+@app.route('/api/playlist/<name>', methods=['GET'])
+def get_playlist(name):
+    return jsonify(read_playlist(name))
+
+@app.route('/api/playlist', methods=['POST'])
+def create_playlist():
+    data = request.json
+    name = data.get('name')
+    songs = data.get('songs', [])
+    write_playlist(name, songs)
+    return jsonify(success=True)
+
+@app.route('/api/playlist/<name>', methods=['DELETE'])
+def remove_playlist(name):
+    delete_playlist(name)
+    return jsonify(success=True)
+
+@app.route('/api/playlist/<name>/reorder', methods=['POST'])
+def reorder_playlist_song(name):
+    data = request.json
+    old_index = data.get('old_index')
+    new_index = data.get('new_index')
+    reorder_song_in_playlist(name, old_index, new_index)
+    return jsonify(success=True)
 
 @app.route('/api/upload', methods=['POST'])
 def upload_mp3():

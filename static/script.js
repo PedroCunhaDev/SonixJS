@@ -1,4 +1,5 @@
 let songs = [];
+let allSongs = [];
 let currentSong = 0;
 let isPlaying = false;
 let isEditing = false;
@@ -15,6 +16,7 @@ const pauseSvg = document.getElementById('pause');
 const editBtn = document.getElementById('edit-btn');
 const nowPlaying = document.getElementById('now-playing');
 const tableBody = document.querySelector("#songs-table tbody");
+const searchInput = document.getElementById('search');
 
 if ('mediaSession' in navigator) {
     navigator.mediaSession.setActionHandler('play', () => {
@@ -75,8 +77,11 @@ document.onkeydown = (event) => {
         }
         return;
     }
-    if (
-        event.key == ' ' ||
+    const isSearching = searchInput === document.activeElement;
+    if (isSearching) {
+        return;
+    }
+    if (event.key == ' ' ||
         event.key == 'ArrowLeft' ||
         event.key == 'ArrowRight' ||
         event.key == 'ArrowUp' ||
@@ -158,12 +163,10 @@ function shuffle(arr) {
     }
     return arr;
 }
-async function fetchSongs() {
+
+function loadTable(_songs) {
     tbody.innerHTML = "";
-    const response = await fetch('/api/songs');
-    songs = await response.json();
-    songs = shuffle(songs);
-    songs.forEach((song, index) => {
+    _songs.forEach((song, index) => {
         const row = document.createElement('tr');
 
         row.innerHTML = `
@@ -189,6 +192,15 @@ async function fetchSongs() {
 
         tableBody.appendChild(row);
     });
+}
+async function fetchSongs(search) {
+    const response = await fetch(`/api/songs${search ? `?search=${search}` : ''}`);
+    songs = await response.json();
+    songs = shuffle(songs);
+    if (!search) {
+        allSongs = songs;
+    }
+    loadTable(songs);
 }
 
 async function updateMetadata(index, field, value) {
@@ -251,6 +263,24 @@ async function ngrok() {
 	alert(result);
 }
 
+let searchTimeout;
+previousSearch = '';
+function search() {
+    const text = searchInput.value.toLowerCase();
+    console.log(text);
+    if (text.length == 1 || text == previousSearch) return;
+    previousSearch = text;
+    if (text.length == 0) {
+        loadTable(allSongs);
+        return;
+    }
+    clearTimeout(searchTimeout);
+    searchTimeout = setTimeout(() => {
+        fetchSongs(text);
+    }, 1000);
+}
+searchInput.addEventListener("keyup", search);
+
 function pause() {
     audioPlayer.pause();
     isPlaying = false;
@@ -259,7 +289,7 @@ function pause() {
 }
 
 function play(filename) {
-    tableBody.children[currentSong].classList.remove('playing');
+    tableBody.children[currentSong]?.classList.remove('playing');
     if (typeof (filename) == 'number') {
         currentSong = filename;
         play(songs[currentSong].filename);

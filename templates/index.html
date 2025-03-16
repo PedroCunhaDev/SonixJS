@@ -19,8 +19,7 @@
     <div id="upload-message"></div>
     <div id="top-bar">
         <span id="greeting">
-            <span id="message"></span>,
-            <span id="username" contenteditable="true" style="text-decoration: underline;"></span>
+            <input id="search" type="search" placeholder="Search...">
         </span>
 
         <button id="options-btn" onclick="toggleModal(optionsModal, optionsBtn)">
@@ -74,6 +73,10 @@
                 <div class="input-container">
                     <label>Font Weight</label>
                     <input id="inp-font-weight" type="range" min="100" max="900" step="100" value="500">
+                </div>
+                <div class="input-container">
+                    <label>Glow Scale</label>
+                    <input id="inp-glow-scale" type="range" min="1" max="100" step="1" value="1">
                 </div>
                 <div class="input-container">
                     <label>App Font:</label>
@@ -208,7 +211,7 @@
     </div>
 
     <script src="static/script.js"></script>
-    <script src="static/greeting.js"></script>
+    <!-- <script src="static/greeting.js"></script> -->
     <script src="static/vars.js"></script>
     <script src="static/modal.js"></script>
     <script src="static/glow.js"></script>

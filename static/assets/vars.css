@@ -9,6 +9,8 @@
     --main-opacity: 1;
     --main-body-width: 100vw;
     --main-font-weight: 500;
+    --main-glow-scale-w: 50dvw;
+    --main-glow-scale-h: 50dvh;
     
 
     /* Highlights */

@@ -76,6 +76,8 @@ function updateRangeCSS(input, cssVarName, value, unit, min, max) {
 setupRangeInput('inp-opacity', 'main-opacity', 'opacity', 0.2, 1, 1); // Opacidade de 0.2 a 1
 setupRangeInput('inp-font-weight', 'main-font-weight', 'font-weight', 100, 900, 500); // Peso da fonte de 100 a 900
 setupRangeInput('inp-body-width', 'main-body-width', 'body-width', 30, 100, 100, '%'); // Largura do body de 30% a 100%
+setupRangeInput('inp-glow-scale', 'main-glow-scale-w', 'glow-scale-w', 1, 100, 50, 'dvw'); // escala do brilho de fundo
+setupRangeInput('inp-glow-scale', 'main-glow-scale-h', 'glow-scale-h', 1, 100, 50, 'dvh'); // escala do brilho de fundo
 //#endregion
 //#region checkboxes
 const checkBorder = document.getElementById('inp-check-border');
